@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Crawler
 {
@@ -23,7 +27,19 @@ namespace Crawler
         /**
          * tracks if the game is running
          */
-        private bool active = false;
+        private bool active = true;
+        public bool isPlaying = false;
+        private string[] mapFile; // stores each line of map
+        private char[][] mapFile2 = new char[0][];
+        private char[][] mapTiles = new char[0][]; // stores each char of map
+
+        private int yPos; // store x coordinates
+        private int xPos; // stores y coordinates
+       
+        private int prevXPos;
+        private int prevYPos;
+
+        private int gold;
 
         /**
          * Reads user input from the Console
@@ -38,7 +54,17 @@ namespace Crawler
             string inputRead = string.Empty;
             
             // Your code here
-            
+            if (isPlaying == true) // if play command has been issued, then read key inputs
+            {
+                ConsoleKeyInfo info = Console.ReadKey();
+                char inputtedKey = info.KeyChar;
+                inputRead = inputtedKey.ToString();
+            }
+            else // if play command hasn't been issued read line command inputs
+            {
+                inputRead = Console.ReadLine();
+            }
+
             return inputRead;
         }
 
@@ -53,6 +79,42 @@ namespace Crawler
         public void ProcessUserInput(string input)
         {
             // Your Code here
+            input = input.ToLower();
+            switch (input)
+            {
+                case "load Simple.map":
+                    InitializeMap("Simple.map");
+                    break;
+                case "load simple.map":
+                    InitializeMap("Simple.map");
+                    break;
+                case "load Advanced.map":
+                    InitializeMap("Advanced.map");
+                    break;
+                case "load advanced.map":
+                    InitializeMap("Advanced.map");
+                    break;
+                case "play":
+                    action = PlayerActions.NOTHING;
+                    isPlaying = true;
+                    break;
+                case "w":
+                    action = PlayerActions.NORTH;
+                    break;
+                case "a":
+                    action = PlayerActions.WEST;
+                    break;
+                case "s":
+                    action = PlayerActions.SOUTH;
+                    break;
+                case "d":
+                    action = PlayerActions.EAST;
+                    break;
+            }
+            if (isPlaying == false)
+            {
+                action = PlayerActions.NOTHING;
+            }
         }
 
         /**
@@ -65,9 +127,181 @@ namespace Crawler
          */
         public void GameLoop(bool active)
         {
-            
-
             // Your code here
+            bool correctMove = false;
+            bool gameEnd = false;
+            if (isPlaying == true)
+            {   
+                
+                try
+                {
+                    try { Console.Clear(); }                 catch (IOException) { }
+                    if (action == PlayerActions.NORTH)
+                    {
+                        GetPlayerPosition();
+                        prevXPos = yPos;
+                        prevYPos = xPos;
+                        correctMove = true;
+                        yPos -= 1;
+
+                        if (mapTiles[yPos][xPos] == '.')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                        }
+                        else if (mapTiles[yPos][xPos] == 'E')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gameEnd = true;
+                        }
+                        else if (mapTiles[yPos][xPos] == '#')
+                        {
+                            yPos = prevXPos;
+                        }
+                        else if (mapTiles[yPos][xPos] == 'G')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gold += 1;
+                        }
+                        else
+                        {
+                            xPos = prevYPos;
+                        }
+
+                    }
+                    else if (action == PlayerActions.SOUTH)
+                    {
+                        GetPlayerPosition();
+                        prevXPos = yPos;
+                        prevYPos = xPos;
+                        correctMove = true;
+                        yPos += 1;
+
+                        if (mapTiles[yPos][xPos] == '.')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                        }
+                        else if (mapTiles[yPos][xPos] == 'E')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gameEnd = true;
+                        }
+                        else if (mapTiles[yPos][xPos] == '#')
+                        {
+                            yPos = prevXPos;
+                        }
+                        else if (mapTiles[yPos][xPos] == 'G')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gold += 1;
+                        }
+                        else
+                        {
+                            xPos = prevYPos;
+                        }
+
+                    }
+                    else if (action == PlayerActions.EAST)
+                    {
+                        GetPlayerPosition();
+                        prevXPos = yPos;
+                        prevYPos = xPos;
+                        correctMove = true;
+                        xPos += 1;
+
+                        if (mapTiles[yPos][xPos] == '.')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                        }
+                        else if (mapTiles[yPos][xPos] == 'E')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gameEnd = true;
+                        }
+                        else if (mapTiles[yPos][xPos] == '#')
+                        {
+                            xPos = prevYPos;
+                        }
+                        else if (mapTiles[yPos][xPos] == 'G')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gold += 1;
+                        }
+                        else
+                        {
+                            xPos = prevYPos;
+                        }
+                    }
+                    else if (action == PlayerActions.WEST)
+                    {
+                        GetPlayerPosition();
+                        prevXPos = yPos;
+                        prevYPos = xPos;
+                        correctMove = true;
+                        xPos -= 1;
+
+                        if (mapTiles[yPos][xPos] == '.')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                        }
+                        else if (mapTiles[yPos][xPos] == 'E')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gameEnd = true;
+                        }
+                        else if (mapTiles[yPos][xPos] == '#')
+                        {
+                            xPos = prevYPos;
+                        }
+                        else if (mapTiles[yPos][xPos] == 'G')
+                        {
+                            mapTiles[yPos][xPos] = '@';
+                            mapTiles[prevXPos][prevYPos] = '.';
+                            gold += 1;
+                        }
+                        else
+                        {
+                            xPos = prevYPos;
+                        }
+                    }
+                    if (correctMove == false)
+                    {
+                        action = PlayerActions.NOTHING;
+                    }
+                    if (gameEnd == true)
+                    {
+                        isPlaying = false;
+                        action = PlayerActions.QUIT;
+                    }
+                }
+                
+                catch (Exception)
+                {
+                    xPos = prevYPos;
+                    yPos = prevXPos;
+                }
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("Game now playing use W, A, S , and D to move.");
+                Console.ResetColor();
+                for (int i = 0; i < mapFile.Length; i++)
+                {
+                    Console.WriteLine(mapTiles[i]);
+                }
+                Console.WriteLine("  ");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("Gold: " + gold);
+                Console.ResetColor();
+            }
 
         
         }
@@ -83,10 +317,37 @@ namespace Crawler
             bool initSuccess = false;
 
             // Your code here
+            try
+            {
+                mapFile = File.ReadAllLines(@"~/../../../../../Crawler/maps/" + mapName);
+                mapFile2 = new char[mapFile.Length][];
+                mapTiles = new char[mapFile.Length][];
+                for (int lines = 0; lines < mapFile.Length; lines++)
+                {
+                    mapFile2[lines] = mapFile[lines].ToCharArray();
+                    mapTiles[lines] = mapFile[lines].ToCharArray();
 
-
-
+                }
+                
+                for (int y = 0; y < mapTiles.Length; y++)
+                {
+                    for (int x = 0; x < mapTiles[y].Length; x++)
+                    {
+                        if (mapTiles[y][x] == 'S')
+                        {
+                            mapTiles[y][x] = '@';
+                            mapFile2[y][x] = '@';
+                        }
+                    }
+                }
+                initSuccess = true;
+            }
+            catch (Exception)
+            {
+                initSuccess = false;
+            }
             return initSuccess;
+            
         }
 
         /**
@@ -98,9 +359,9 @@ namespace Crawler
             char[][] map = new char[0][];
 
             // Your code here
+            
 
-
-            return map;
+            return mapFile2;
         }
 
         /*
@@ -113,9 +374,10 @@ namespace Crawler
             char[][] map = new char[0][];
 
             // Your code here
+            
 
 
-            return map;
+            return mapTiles;
         }
 
         /**
@@ -128,7 +390,20 @@ namespace Crawler
             int[] position = { 0, 0 };
 
             // Your code here
+            for (int y = 0; y < mapTiles.Length; y++)
+            {
+                for (int x = 0; x < mapTiles[y].Length; x++)
+                {
+                    if (mapTiles[y][x] == '@')
+                    {
+                        position[0] = x;
+                        position[1] = y;
+                        xPos = x;
+                        yPos = y;
+                    }
+                }
 
+            }
             return position;
         }
 
@@ -139,11 +414,9 @@ namespace Crawler
         */
         public int GetPlayerAction()
         {
-            int action = 0;
-
+            
             // Your code here
-
-            return action;
+            return (int)action;
         }
 
 
@@ -151,7 +424,10 @@ namespace Crawler
         {
             bool running = false;
             // Your code here 
-
+            if (isPlaying == true)
+            {
+                running = true;
+            }
             return running;
         }
 
