@@ -36,10 +36,15 @@ namespace Crawler
         private int yPos; // store x coordinates
         private int xPos; // stores y coordinates
        
-        private int prevXPos;
         private int prevYPos;
+        private int prevXPos;
 
-        private int gold;
+        private int gold = 0;
+        private int health = 3; 
+
+        private bool wasGold = false; // if true, the player is currently stood on gold
+
+
 
         /**
          * Reads user input from the Console
@@ -80,7 +85,7 @@ namespace Crawler
         {
             // Your Code here
             input = input.ToLower();
-            switch (input)
+            switch (input)  // switch statement sets PlayerActions depending on input, also calls initialize map when command is entered, and starts game when play command is used
             {
                 case "load Simple.map":
                     InitializeMap("Simple.map");
@@ -110,6 +115,12 @@ namespace Crawler
                 case "d":
                     action = PlayerActions.EAST;
                     break;
+                case " ":
+                    action = PlayerActions.ATTACK;
+                    break;
+                case "e":
+                    action = PlayerActions.PICKUP;
+                    break;
             }
             if (isPlaying == false)
             {
@@ -130,148 +141,243 @@ namespace Crawler
             // Your code here
             bool correctMove = false;
             bool gameEnd = false;
+            
+
             if (isPlaying == true)
             {   
                 
                 try
                 {
-                    try { Console.Clear(); }                 catch (IOException) { }
+                    try { Console.Clear(); }   catch (IOException) { } // prevents console.clear() errors by catching errors
                     if (action == PlayerActions.NORTH)
                     {
                         GetPlayerPosition();
-                        prevXPos = yPos;
-                        prevYPos = xPos;
+                        prevYPos = yPos;
+                        prevXPos = xPos;
                         correctMove = true;
-                        yPos -= 1;
+                        yPos -= 1; //adjusts coords relevant to movement
 
-                        if (mapTiles[yPos][xPos] == '.')
+                        if (mapTiles[yPos][xPos] == '.') // checks for empty space
+                        {
+                            mapTiles[yPos][xPos] = '@'; // replaces empty space with player (@)
+                            if (wasGold == true) // used to replace gold with G if walked over
+                            {
+                                mapTiles[prevYPos][prevXPos] = 'G';
+                                wasGold = false;
+                            }
+                            else
+                            {
+                                mapTiles[prevYPos][prevXPos] = '.';
+                            }
+                        }
+                        else if (mapTiles[yPos][xPos] == 'E') // checks if player is on the finish
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("You defeated the dungeon crawler with " + gold +" gold! :)");
+                            gameEnd = true; // used to end game when player reaches E
                         }
-                        else if (mapTiles[yPos][xPos] == 'E')
+                        else if (mapTiles[yPos][xPos] == '#') 
+                        {
+                            yPos = prevYPos; // prevents player from moving onto walls
+                        }
+                        else if (mapTiles[yPos][xPos] == 'G') // allows player to move onto gold
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
-                            gameEnd = true;
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            wasGold = true; // used to keep track of when player coords are over gold
                         }
-                        else if (mapTiles[yPos][xPos] == '#')
+                        else if (mapTiles[yPos][xPos] == 'M') // if player collides with monster, remove 1 health
                         {
-                            yPos = prevXPos;
-                        }
-                        else if (mapTiles[yPos][xPos] == 'G')
-                        {
-                            mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
-                            gold += 1;
+                            yPos = prevYPos;
+                            health -= 1;
                         }
                         else
                         {
-                            xPos = prevYPos;
+                            xPos = prevXPos;
                         }
 
                     }
                     else if (action == PlayerActions.SOUTH)
                     {
                         GetPlayerPosition();
-                        prevXPos = yPos;
-                        prevYPos = xPos;
+                        prevYPos = yPos;
+                        prevXPos = xPos;
                         correctMove = true;
                         yPos += 1;
 
                         if (mapTiles[yPos][xPos] == '.')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
+                            if (wasGold == true)
+                            {
+                                mapTiles[prevYPos][prevXPos] = 'G';
+                                wasGold = false;
+                            }
+                            else
+                            {
+                                mapTiles[prevYPos][prevXPos] = '.';
+                            }
                         }
                         else if (mapTiles[yPos][xPos] == 'E')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("You defeated the dungeon crawler with " + gold +" gold! :)");
                             gameEnd = true;
                         }
                         else if (mapTiles[yPos][xPos] == '#')
                         {
-                            yPos = prevXPos;
+                            yPos = prevYPos;
                         }
                         else if (mapTiles[yPos][xPos] == 'G')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
-                            gold += 1;
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            wasGold = true;
+                        }
+                        else if (mapTiles[yPos][xPos] == 'M')
+                        {
+                            yPos = prevYPos;
+                            health -= 1;
                         }
                         else
                         {
-                            xPos = prevYPos;
+                            xPos = prevXPos;
                         }
 
                     }
                     else if (action == PlayerActions.EAST)
                     {
                         GetPlayerPosition();
-                        prevXPos = yPos;
-                        prevYPos = xPos;
+                        prevYPos = yPos;
+                        prevXPos = xPos;
                         correctMove = true;
                         xPos += 1;
 
                         if (mapTiles[yPos][xPos] == '.')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
+                            if (wasGold == true)
+                            {
+                                mapTiles[prevYPos][prevXPos] = 'G';
+                                wasGold = false;
+                            }
+                            else
+                            {
+                                mapTiles[prevYPos][prevXPos] = '.';
+                            }
                         }
                         else if (mapTiles[yPos][xPos] == 'E')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
-                            gameEnd = true;
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("You defeated the dungeon crawler with " + gold +" gold! :)");
+                            gameEnd = true; 
                         }
                         else if (mapTiles[yPos][xPos] == '#')
                         {
-                            xPos = prevYPos;
+                            xPos = prevXPos; 
                         }
-                        else if (mapTiles[yPos][xPos] == 'G')
+                        else if (mapTiles[yPos][xPos] == 'G') 
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
-                            gold += 1;
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            wasGold = true; 
+                        }
+                        else if (mapTiles[yPos][xPos] == 'M')
+                        {
+                            xPos = prevXPos;
+                            health -= 1;
                         }
                         else
                         {
-                            xPos = prevYPos;
+                            xPos = prevXPos;
                         }
                     }
                     else if (action == PlayerActions.WEST)
                     {
                         GetPlayerPosition();
-                        prevXPos = yPos;
-                        prevYPos = xPos;
+                        prevYPos = yPos;
+                        prevXPos = xPos;
                         correctMove = true;
+                        
                         xPos -= 1;
 
                         if (mapTiles[yPos][xPos] == '.')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
+                            if (wasGold == true)
+                            {
+                                mapTiles[prevYPos][prevXPos] = 'G';
+                                wasGold = false;
+                            }
+                            else
+                            {
+                                mapTiles[prevYPos][prevXPos] = '.';
+                            }
                         }
                         else if (mapTiles[yPos][xPos] == 'E')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("You defeated the dungeon crawler with " + gold +" gold! :)");
                             gameEnd = true;
                         }
                         else if (mapTiles[yPos][xPos] == '#')
                         {
-                            xPos = prevYPos;
+                            xPos = prevXPos;
                         }
                         else if (mapTiles[yPos][xPos] == 'G')
                         {
                             mapTiles[yPos][xPos] = '@';
-                            mapTiles[prevXPos][prevYPos] = '.';
-                            gold += 1;
+                            mapTiles[prevYPos][prevXPos] = '.';
+                            wasGold = true;
+                        }
+                        else if (mapTiles[yPos][xPos] == 'M')
+                        {
+                            xPos = prevXPos;
+                            health -= 1;
                         }
                         else
                         {
-                            xPos = prevYPos;
+                            xPos = prevXPos;
+                        }
+                    }
+                    else if (action == PlayerActions.ATTACK)
+                    {
+                        GetPlayerPosition();
+                        if (mapTiles[yPos + 1][xPos] == 'M') { mapTiles[yPos + 1][xPos] = '.'; }
+                        if (mapTiles[yPos - 1][xPos] == 'M') { mapTiles[yPos - 1][xPos] = '.'; }
+                        if (mapTiles[yPos][xPos + 1] == 'M') { mapTiles[yPos][xPos + 1] = '.'; }
+                        if (mapTiles[yPos][xPos - 1] == 'M') { mapTiles[yPos][xPos - 1] = '.'; }
+                    }
+                    else if (action == PlayerActions.PICKUP) // checks surrounding tiles which are G when pickup is triggered
+                    {
+                        GetPlayerPosition();
+                        if (mapTiles[yPos + 1][xPos] == 'G') // changes gold tiles to empty tiles after pickup
+                        {
+                            mapTiles[yPos + 1][xPos] = '.';
+                            gold += 1;
+                        }
+                        if (mapTiles[yPos - 1][xPos] == 'G')
+                        {
+                            mapTiles[yPos -1][xPos] = '.';
+                            gold += 1;
+                        }
+                        if (mapTiles[yPos][xPos + 1] == 'G')
+                        {
+                            mapTiles[yPos][xPos + 1] = '.';
+                            gold += 1;
+                        }
+                        if (mapTiles[yPos][xPos - 1] == 'G')
+                        {
+                            mapTiles[yPos][xPos - 1] = '.';
+                            gold += 1;
                         }
                     }
                     if (correctMove == false)
@@ -287,19 +393,33 @@ namespace Crawler
                 
                 catch (Exception)
                 {
-                    xPos = prevYPos;
-                    yPos = prevXPos;
+                    xPos = prevXPos;
+                    yPos = prevYPos;
                 }
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("Game now playing use W, A, S , and D to move.");
+                Console.WriteLine("Game now playing:");
+                Console.WriteLine(" - Use W, A, S, and D to move the player ('@')");
+                Console.WriteLine(" - Use Spacebar when standing next to a monster ('M') to attack");
+                Console.WriteLine(" - Use E when standing next to a piece of gold ('G') to pickup the gold");
+                Console.WriteLine(" ");
                 Console.ResetColor();
-                for (int i = 0; i < mapFile.Length; i++)
+                for (int i = 0; i < mapTiles.Length; i++)
                 {
                     Console.WriteLine(mapTiles[i]);
                 }
                 Console.WriteLine("  ");
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Gold: " + gold);
+                Console.ForegroundColor = ConsoleColor.Red;
+                if (health == 3) { Console.WriteLine("Health: ♥ ♥ ♥"); }
+                if (health == 2) { Console.WriteLine("Health: ♥ ♥"); }
+                if (health == 1) { Console.WriteLine("Health: ♥"); }
+                if (health <= 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("You died due to 0 health :'(");
+                    action = PlayerActions.QUIT;
+                }
                 Console.ResetColor();
             }
 
@@ -319,9 +439,9 @@ namespace Crawler
             // Your code here
             try
             {
-                mapFile = File.ReadAllLines(@"~/../../../../../Crawler/maps/" + mapName);
-                mapFile2 = new char[mapFile.Length][];
-                mapTiles = new char[mapFile.Length][];
+                mapFile = File.ReadAllLines(@"~/../../../../../Crawler/maps/" + mapName); // stores string array of map
+                mapFile2 = new char[mapFile.Length][]; // original map
+                mapTiles = new char[mapFile.Length][]; // map which is updated during gameplay
                 for (int lines = 0; lines < mapFile.Length; lines++)
                 {
                     mapFile2[lines] = mapFile[lines].ToCharArray();
@@ -333,13 +453,16 @@ namespace Crawler
                 {
                     for (int x = 0; x < mapTiles[y].Length; x++)
                     {
-                        if (mapTiles[y][x] == 'S')
+                        if (mapTiles[y][x] == 'S') // replaces start point with player ("@")
                         {
                             mapTiles[y][x] = '@';
                             mapFile2[y][x] = '@';
                         }
                     }
                 }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(mapName + " is successfully loaded, type 'play' to start the game");
+                Console.ResetColor();
                 initSuccess = true;
             }
             catch (Exception)
@@ -390,7 +513,7 @@ namespace Crawler
             int[] position = { 0, 0 };
 
             // Your code here
-            for (int y = 0; y < mapTiles.Length; y++)
+            for (int y = 0; y < mapTiles.Length; y++) // searches running map for the player ("@") and stores coordinates in variables xPos and yPos, for use in othe methods
             {
                 for (int x = 0; x < mapTiles[y].Length; x++)
                 {
@@ -424,7 +547,7 @@ namespace Crawler
         {
             bool running = false;
             // Your code here 
-            if (isPlaying == true)
+            if (isPlaying == true) 
             {
                 running = true;
             }
