@@ -22,6 +22,8 @@ The Dungeon Crawler contains 3 entities known the the player:
  
 ## Movement 
 The player can move using the above controls, '.' represents an empty space, which the player can move onto, the player can also move over gold. '#' represents walls, which the user cannot move over/pass, the same principle applies to monsters ('M'), though the user will take damage if they collide with them!
+Photo of map:
+ ![](https://imgur.com/HoKkmAb.png)
 
 
 
