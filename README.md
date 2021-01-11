@@ -2,7 +2,7 @@
 
 This is my submission for the dungeon crawler game. The objective of the game is the reach the finish whilst collecting the most gold and not dying to monsters.
 
-[Video of project here] (https://youtube.com/)
+ ![Video of project here] (https://youtube.com/)
 
 ## Controls
  * 'W' - to move north (up)
@@ -12,7 +12,7 @@ This is my submission for the dungeon crawler game. The objective of the game is
  * Spacebar - to attack monsters when positioned next to them
  * 'E' - to pickup gold when positioned nect to gold
  
- ![Image of controls](https://imgur.com/pJ163T7)
+ ![Image of controls](https://i.imgur.com/pJ163T7.png)
 
 ## Entities
 The Dungeon Crawler contains 3 entities known the the player:
