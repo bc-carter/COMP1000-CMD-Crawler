@@ -99,6 +99,12 @@ namespace Crawler
                 case "load advanced.map":
                     InitializeMap("Advanced.map");
                     break;
+                case "load Extra.amp":
+                    InitializeMap("Extra.map");
+                    break;
+                case "load extra.map":
+                    InitializeMap("Extra.map");
+                    break;
                 case "play":
                     action = PlayerActions.NOTHING;
                     isPlaying = true;
@@ -439,7 +445,7 @@ namespace Crawler
             // Your code here
             try
             {
-                mapFile = File.ReadAllLines(@"~/../../../../../Crawler/maps/" + mapName); // stores string array of map
+                mapFile = File.ReadAllLines(@"./maps/" + mapName); // stores string array of map
                 mapFile2 = new char[mapFile.Length][]; // original map
                 mapTiles = new char[mapFile.Length][]; // map which is updated during gameplay
                 for (int lines = 0; lines < mapFile.Length; lines++)

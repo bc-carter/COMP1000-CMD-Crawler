@@ -1,22 +1,31 @@
-# 2020-COMP1000-CW2
+# Ben Carter 2020-COMP1000-CW2
 
-This is the starting base for your second coursework. 
+This is my submission for the dungeon crawler game. The objective of the game is the reach the finish whilst collecting the most gold and not dying to monsters.
 
-Use this ReadMe file to document your project by:
- * adding **important** details
- * showing images 
- * linking used resources such as guides, ie. [how to use markdown](https://guides.github.com/features/mastering-markdown/)
+Video of project.
+
+##Controls
+ * 'W' - to move north (up)
+ * 'A' - to move west (left)
+ * 'S' - to move south (down)
+ * 'D' - to move east (right)
+ * Spacebar - to attack monsters when positioned next to them
+ * 'E' - to pickup gold when positioned nect to gold
+
+## Entities
+The Dungeon Crawler contains 3 entities known the the player:
+ * M - monsters
+ * G - gold
+ * @ - the player
  
-## What to do!
-* install the required software ([mono sdk](https://www.mono-project.com/download/stable/), git, visual studio or notepad++, )
-* Add your code into the required methods within the CMDCrawler.cs
-* build the project on command line using `dotnet cake --target=Build --rebuild=true --verbosity=Diagnostic`
-* test your project using `dotnet cake --target=Test --verbosity=Quiet`
-* push your changes once you completed a part of it and iteratively work on it
-* **SUBMIT** your _final_ codebase by the deadline
- 
-## What to avoid!
-* do not modifiy the build process
-* change the used libraries or
-* modify existing templates
-* start the project late
+## Movement 
+The player can move using the above controls, '.' represents empty spaces, which the player can move onto, the player can also move over gold. '#' represents walls, which the user cannot move over/pass, the same principle applies to monsters ('M'), though the user will take damage if they collide with them!
+
+
+
+
+
+//Use this ReadMe file to document your project by:
+ //* adding **important** details
+ //* showing images 
+ //* linking used resources such as guides, ie. [how to use markdown](https://guides.github.com/features/mastering-markdown/)
