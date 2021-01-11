@@ -2,15 +2,17 @@
 
 This is my submission for the dungeon crawler game. The objective of the game is the reach the finish whilst collecting the most gold and not dying to monsters.
 
-Video of project.
+[Video of project here] (https://youtube.com/)
 
-##Controls
+## Controls
  * 'W' - to move north (up)
  * 'A' - to move west (left)
  * 'S' - to move south (down)
  * 'D' - to move east (right)
  * Spacebar - to attack monsters when positioned next to them
  * 'E' - to pickup gold when positioned nect to gold
+ 
+ ![Image of controls](https://imgur.com/a/lEmT5Mo)
 
 ## Entities
 The Dungeon Crawler contains 3 entities known the the player:
@@ -19,7 +21,7 @@ The Dungeon Crawler contains 3 entities known the the player:
  * @ - the player
  
 ## Movement 
-The player can move using the above controls, '.' represents empty spaces, which the player can move onto, the player can also move over gold. '#' represents walls, which the user cannot move over/pass, the same principle applies to monsters ('M'), though the user will take damage if they collide with them!
+The player can move using the above controls, '.' represents an empty space, which the player can move onto, the player can also move over gold. '#' represents walls, which the user cannot move over/pass, the same principle applies to monsters ('M'), though the user will take damage if they collide with them!
 
 
 
