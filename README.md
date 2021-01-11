@@ -12,7 +12,7 @@ This is my submission for the dungeon crawler game. The objective of the game is
  * Spacebar - to attack monsters when positioned next to them
  * 'E' - to pickup gold when positioned nect to gold
  
- ![Image of controls](https://imgur.com/a/lEmT5Mo)
+ ![Image of controls](https://imgur.com/pJ163T7)
 
 ## Entities
 The Dungeon Crawler contains 3 entities known the the player:
