@@ -2,7 +2,7 @@
 
 This is my submission for the dungeon crawler game. The objective of the game is the reach the finish whilst collecting the most gold and not dying to monsters.
 
-[Video of project here] (https://youtube.com/)
+[CMD Crawler Video](https://youtu.be/2tj3RiOxTAY)
 
 ## Controls
  * 'W' - to move north (up)
